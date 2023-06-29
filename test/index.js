@@ -81,7 +81,7 @@ describe('Testes da aplicaçao',  () => {
     it('deveria criar o usuario raupp', function (done) {
         chai.request(app)
         .post('/users')
-        .send({name: "raupp", email: "jose.raupp@devoz.com.br", userName: "raupp", password: "123"})
+        .send({name: "raupp", email: "jose.raupp@devoz.com.br", userName: "raupp", password: "123", age: 18})
         .end(function (err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(201);
@@ -91,13 +91,97 @@ describe('Testes da aplicaçao',  () => {
 
     //...adicionar pelo menos mais 5 usuarios. se adicionar usuario menor de idade, deve dar erro. Ps: não criar o usuario naoExiste
 
-    it('nao deveria criar usuario menor de idade', function (done) {
+    it('deveria criar o usuario fernando', function (done) {
         chai.request(app)
         .post('/users')
-        .send({name: "pedro", email: "pedro@devoz.com.br", userName: "pedro", password: "123"})
+        .send({name: "fernando", email: "fernando@devoz.com.br", userName: "fernando", password: "1234", age: 55})
         .end(function (err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(201);
+            done();
+        });
+    });
+
+    it('nao deveria criar usuario com o mesmo username', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "raupp", email: "jose.raupp@devoz.com.br", userName: "raupp", password: "123", age: 18})
+        .end(function (err, res) {
+            expect(res).to.have.status(400);
+            expect(res.body.validationErrors).to.equal('Username or email already exists.');
+
+            done();
+        });
+    });
+
+    it('nao deveria criar usuario com o mesmo email', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "raupp", email: "jose.raupp@devoz.com.br", userName: "raupp", password: "123", age: 18})
+        .end(function (err, res) {
+            expect(res).to.have.status(400);
+            expect(res.body.validationErrors).to.equal('Username or email already exists.');
+
+            done();
+        });
+    });
+
+    it('nao deveria criar usuario menor de idade', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "pedro", email: "pedro@devoz.com.br", userName: "pedro", password: "123", age: 10})
+        .end(function (err, res) {
+            expect(res).to.have.status(400);
+            expect(res.body.validationErrors[0]).to.equal('User cannot be less than 18 years old');
+
+            done();
+        });
+    });
+
+    it('nao deveria criar usuario com o email invalido', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "denis", email: "jose.rauppdevoz.com.br", userName: "denis", password: "123", age: 21})
+        .end(function (err, res) {
+            expect(res).to.have.status(400);
+            expect(res.body.validationErrors[0]).to.equal('Email is invalid');
+
+            done();
+        });
+    });
+
+    it('nao deveria criar usuario sem username', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "carvalho", email: "jose@evoz.com.br", password: "123", age: 21})
+        .end(function (err, res) {
+            expect(res).to.have.status(400);
+            expect(res.body.validationErrors[0]).to.equal('Username is required');
+
+            done();
+        });
+    });
+
+    it('nao deveria criar usuario sem password', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "carvalhosouza", email: "jose@ez.com.br", userName: "carvalhosouza", age: 21})
+        .end(function (err, res) {
+            expect(res).to.have.status(400);
+            expect(res.body.validationErrors[0]).to.equal('Password is required');
+
+            done();
+        });
+    });
+
+    it('nao deveria criar usuario sem idade', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "carvalhosouza", email: "jose@ez.com.br", userName: "carvalhosouza", password: 'root'})
+        .end(function (err, res) {
+            expect(res).to.have.status(400);
+            expect(res.body.validationErrors[0]).to.equal('Age is required');
+
             done();
         });
     });
