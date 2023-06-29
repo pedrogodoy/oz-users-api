@@ -22,6 +22,8 @@
   "license": "ISC",
   "homepage": "https://bitbucket.org/developmentOneZero/fileteste#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "class-validator": "^0.14.0",
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^9.4.0",

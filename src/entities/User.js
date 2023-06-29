@@ -8,11 +8,23 @@ module.exports = new EntitySchema({
       type: 'integer',
       generated: 'increment',
     },
+    userName: {
+      type: 'varchar',
+      nullable: false,
+      unique: true,
+    },
+    password: {
+      type: 'varchar',
+      nullable: false,
+    },
     name: {
       type: 'varchar',
+      nullable: true,
     },
     email: {
       type: 'varchar',
+      nullable: true,
+      unique: true,
     },
   },
 });
