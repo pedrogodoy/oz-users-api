@@ -26,5 +26,9 @@ module.exports = new EntitySchema({
       nullable: true,
       unique: true,
     },
+    age: {
+      type: 'integer',
+      nullable: false,
+    },
   },
 });

@@ -7,6 +7,8 @@ class UserDTO {
 
   password;
 
+  age;
+
   validate() {
     const errors = [];
 
@@ -20,6 +22,13 @@ class UserDTO {
 
     if (this.email && !this.email.includes('@')) {
       errors.push('Email is invalid');
+    }
+
+    if(!this.age) {
+      errors.push('Age is required');
+    }
+    if (this.age && this.age < 18) {
+      errors.push('User cannot be less than 18 years old');
     }
 
     return errors;

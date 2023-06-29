@@ -30,7 +30,6 @@ class UsersService {
         await dataSource.manager.save(User, { ...userDTO, password: hashedPassword });
       }
     } catch (err) {
-      console.error(err)
       throw err;
     }
   }
