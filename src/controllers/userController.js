@@ -14,8 +14,10 @@ usersController.get('/users/:id', async (ctx) => {
 });
 
 usersController.post('/users', async (ctx) => {
-  // Handle POST request to the root of the "users" route
-  // Access request body using ctx.request.body
+  const body = ctx.request.body;
+  users.createUser(body)
+
+  ctx.status = 201;
 });
 
 usersController.put('/users/:id', async (ctx) => {

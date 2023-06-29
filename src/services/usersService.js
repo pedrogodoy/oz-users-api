@@ -6,6 +6,10 @@ class UsersService {
   getAllUsers() {
     return DB;
   }
+
+  createUser(user) {
+    DB.push(user);
+  }
 }
 
 module.exports = UsersService;
