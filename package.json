@@ -24,7 +24,9 @@
   "dependencies": {
     "koa": "^2.13.0",
     "koa-bodyparser": "^4.4.1",
-    "koa-router": "^9.4.0"
+    "koa-router": "^9.4.0",
+    "sqlite3": "^5.1.6",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "chai": "^4.2.0",
