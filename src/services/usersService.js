@@ -5,7 +5,7 @@ const { hashPassword, comparePasswords } = require('../utils/passwordUtils');
 
 class UsersService {
   getAllUsers() {
-    return DB;
+    return { rows: [] };
   }
 
   async createUser(user) {

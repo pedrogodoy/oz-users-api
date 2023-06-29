@@ -2,9 +2,9 @@ const typeorm = require('typeorm');
 
 const dataSource = new typeorm.DataSource({
   type: 'sqlite',
-  database: './database.db',
+  database: process.env.NODE_ENV === 'test' ? './database.test.db' : './database.db',
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: [
     require("../entities/User.js"),
   ],
