@@ -25,9 +25,9 @@ const router = new Router();
 
 
 //rota simples pra testar se o servidor está online
-// router.get('/', async (ctx) => {
-//   ctx.body = `Seu servidor esta rodando em http://localhost:${PORT}`; //http://localhost:3000/
-// });
+router.get('/', async (ctx) => {
+  ctx.body = `Seu servidor esta rodando em http://localhost:${PORT}`; //http://localhost:3000/
+});
 
 const document = swagger.loadDocumentSync('api.yaml');
 
@@ -42,10 +42,10 @@ dataSource.initialize().then(() => {
 koa
   .use(koaBody())
   .use(bodyParser())
-  .use(koaStatic('node_modules/swagger-ui-dist'))
   .use(router.routes())
   .use(usersController.routes())
   .use(usersController.allowedMethods())
+  .use(koaStatic('node_modules/swagger-ui-dist'))
 
 
 const server = koa.listen(PORT);

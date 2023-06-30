@@ -1,12 +1,326 @@
-swagger: '2.0'
+openapi: 3.0.1
 info:
+  title: Oz Users
+  description: |-
+    Esta é a documentação de uma API simples de usuário
+    
   version: 1.0.0
-  title: Oz Users API Documentation
-  description: API de lista de usuáros
+externalDocs:
+  description: Saiba mais sobre este projeto no seu repositório
+  url: https://github.com/pedrogodoy/oz-users-api/
+servers:
+  - url: http://localhost:3000/
+# tags:
+  # - name: users
+  #   description: Operations about user
 paths:
   /users:
-    get:
-      description: Returns a list of users              
+    post:
+      tags:
+        - user
+      summary: Create user
+      description: Cria um usuário no sistema
+      operationId: createUser
+      requestBody:
+        description: Exemplo de body de usuário
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
       responses:
         200:
-          description: Successful response 
+          description: sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'
+        400:
+          description: erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestSchema'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BadRequestSchema'
+          
+        500:
+          description: erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    
+    get:
+      tags:
+        - user
+      summary: List all users
+      description: 'lista todos os usuários do sistema'
+      operationId: loginUser
+      parameters:
+        - name: page
+          in: query
+          description: A página da listagem
+          required: false
+          schema:
+            type: number
+  
+      responses:
+        200:
+          description: sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetUsersPagination'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/GetUsersPagination'
+        500:
+          description: erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+  
+          
+  /users/{username}:
+    get:
+      tags:
+        - user
+      summary: Get user by user name
+      description: ''
+      operationId: getUserByName
+      parameters:
+        - name: username
+          in: path
+          description: 'The name that needs to be fetched. Use user1 for testing. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'
+        404:
+          description: usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorsString'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorsString'
+        
+        500:
+          description: erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    put:
+      tags:
+        - user
+      summary: Atualiza um usuário exitente
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: username
+          in: path
+          description: userName do usuário a ser apagado
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatedUser'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CreatedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreatedUser'
+      responses:
+        200:
+          description: sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CreatedUser'
+        400:
+          description: erro de validação
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestSchema'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BadRequestSchema'
+                
+        404:
+          description: usuário não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorsString'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorsString'
+          
+        500:
+          description: erro interno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/InternalServerError'
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      description: Este método apaga um usuário do sistema
+      operationId: deleteUser
+      parameters:
+        - name: username
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Sucesso
+        '404':
+          description: Usuário não encontrado
+components:
+  schemas:
+    CreatedUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        userName:
+          type: string
+          example: theUser
+        name:
+          type: string
+          example: John
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '12345'
+        age:
+          type: integer
+          description: User Status
+          format: int32
+          example: 18
+      xml:
+        name: createdUser
+        
+    User:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: theUser
+        name:
+          type: string
+          example: John
+        email:
+          type: string
+          example: john@email.com
+        password:
+          type: string
+          example: '12345'
+        age:
+          type: integer
+          description: User Status
+          format: int32
+          example: 18
+      xml:
+        name: user
+        
+    InternalServerError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Internal error
+      xml:
+        name: internalServerError
+        
+    GetUsersPagination:
+      type: object
+      properties:
+        maxItemPerPage:
+          type: number
+          example: 10
+        totalPages:
+          type: number
+          example: 2
+        rows: 
+          type: array
+          items:
+            oneOf:
+             - $ref: '#/components/schemas/CreatedUser'
+      xml:
+        name: getUsersPagination
+        
+    
+    ValidationErrorsString:
+      type: object
+      properties:
+        validationErrors:
+          type: string
+          example: User not found
+      xml:
+        name: internalServerError
+    
+        
+    BadRequestSchema:
+      type: object
+      properties:
+        validationErrors:
+          type: array
+          items:
+            type: string
+            example: ['Username is required', 'Password is required', 'Email is invalid', 'Age is required', 'User cannot be less than 18 years old']
+            
+      xml:
+        name: badRequestSchema
+    
