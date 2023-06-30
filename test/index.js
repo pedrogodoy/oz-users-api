@@ -289,6 +289,18 @@ describe('Testes da aplicaçao', () => {
       });
   });
 
+  it('deveria atualizar o usuario fernando', function (done) {
+    chai.request(app)
+      .put('/users/fernando')
+      .send({ name: "fernando atualizado", email: "fernando@devoz.com.br", userName: "fernando", password: "1234", age: 55 })
+      .end(function (err, res) {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.name).to.be.equal('fernando atualizado');
+        done();
+      });
+  });
+
   it('deveria ser uma lista com pelo menos 5 usuarios', function (done) {
     chai.request(app)
       .get('/users')
