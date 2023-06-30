@@ -24,7 +24,9 @@ router.get('/', async (ctx) => {
   ctx.body = `Seu servidor esta rodando em http://localhost:${PORT}`; //http://localhost:3000/
 });
 
-dataSource.initialize().then(() => {}).catch((err) => {
+dataSource.initialize().then(() => {
+  
+}).catch((err) => {
   console.error("Error during Data Source initialization", err);});
 
 koa

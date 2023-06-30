@@ -52,9 +52,17 @@ describe('Um simples conjunto de testes', function () {
 //testes da aplicação
 describe('Testes da aplicaçao',  () => {
     after(function (done) {
-        exec('rm -r ./database.test.db', (error, stdout, stderr) => {
-            done();
-        });
+        setTimeout(() => {
+            exec('rm -r ./database.test.db', (error, stdout, stderr) => {
+                done();
+            });
+        }, 200)
+    });
+
+    before(function (done) {
+        setTimeout(() => {
+             done();
+        }, 200)
     });
 
     it('o servidor esta online', function (done) {
@@ -95,6 +103,39 @@ describe('Testes da aplicaçao',  () => {
         chai.request(app)
         .post('/users')
         .send({name: "fernando", email: "fernando@devoz.com.br", userName: "fernando", password: "1234", age: 55})
+        .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+
+    it('deveria criar o usuario justino', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "justino", email: "justino@devoz.com.br", userName: "justino", password: "1234", age: 55})
+        .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+
+    it('deveria criar o usuario claudio', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "claudio", email: "claudio@devoz.com.br", userName: "claudio", password: "1234", age: 55})
+        .end(function (err, res) {
+            expect(err).to.be.null;
+            expect(res).to.have.status(201);
+            done();
+        });
+    });
+
+    it('deveria criar o usuario moaraes', function (done) {
+        chai.request(app)
+        .post('/users')
+        .send({name: "moaraes", email: "moaraes@devoz.com.br", userName: "moaraes", password: "1234", age: 55})
         .end(function (err, res) {
             expect(err).to.be.null;
             expect(res).to.have.status(201);
@@ -232,14 +273,14 @@ describe('Testes da aplicaçao',  () => {
     //     });
     // });
 
-    // it('deveria ser uma lista com pelomenos 5 usuarios', function (done) {
-    //     chai.request(app)
-    //     .get('/users')
-    //     .end(function (err, res) {
-    //     expect(err).to.be.null;
-    //     expect(res).to.have.status(200);
-    //     expect(res.body.total).to.be.at.least(5);
-    //     done();
-    //     });
-    // });
+    it('deveria ser uma lista com pelo menos 5 usuarios', function (done) {
+        chai.request(app)
+        .get('/users')
+        .end(function (err, res) {
+        expect(err).to.be.null;
+        expect(res).to.have.status(200);
+        expect(res.body.rows.length).to.be.at.least(5);
+        done();
+        });
+    });
 })
