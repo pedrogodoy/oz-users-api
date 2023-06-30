@@ -53,8 +53,23 @@ usersController.post('/users', async (ctx) => {
   
 });
 
-usersController.put('/users/:id', async (ctx) => {
-  // Update user information
+
+usersController.put('/users/:username', async (ctx) => {
+  try {
+    const body = ctx.request.body;
+  
+    ctx.status = 200;
+    ctx.body = await users.updateUser(body)
+  } catch(err) {
+    if (err.validationErrors) {
+      ctx.status = 404;
+      ctx.body = err;
+    } else {
+      ctx.status = 500;
+      ctx.body = { message: 'Internal error' };
+    }
+  }
+  
 });
 
 usersController.delete('/users/:username', async (ctx) => {

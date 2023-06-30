@@ -17,7 +17,7 @@ class UsersService {
       });
 
       if (results.length === 0) {
-        return { rows: [] }
+        return { maxItemPerPage: pageSize, totalPages, rows: [] }
       }
 
       if (page > totalPages || page < 0) {
@@ -84,6 +84,33 @@ class UsersService {
         const hashedPassword = await hashPassword(user.password);
 
         await dataSource.manager.save(User, { ...userDTO, password: hashedPassword });
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async updateUser(user) {
+    try {
+      const userDTO = new UserDTO();
+      Object.assign(userDTO, user);
+
+      const userAlreadyExists = 
+        await dataSource.manager.findOne(User, { where: [ { userName: userDTO.userName }, { email: userDTO.email } ]  });
+      
+      if (!userAlreadyExists) {
+        throw { validationErrors: 'User not fount' };
+      }
+
+      const validationErrors = userDTO.validate();
+
+      if (validationErrors.length > 0) {
+        throw { validationErrors }
+      } else {
+        const hashedPassword = await hashPassword(user.password);
+
+
+        return await dataSource.manager.save(User, { ...userDTO, id: userAlreadyExists.id, password: hashedPassword });
       }
     } catch (err) {
       throw err;
