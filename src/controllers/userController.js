@@ -57,8 +57,21 @@ usersController.put('/users/:id', async (ctx) => {
   // Update user information
 });
 
-usersController.delete('/users/:id', async (ctx) => {
-  //Delete user information from the database or any other data source
+usersController.delete('/users/:username', async (ctx) => {
+  const username = ctx.params.username;
+  try {
+    await users.deleteUser(username);
+    ctx.status = 204;
+
+  } catch (err) {
+    if (err.validationErrors) {
+      ctx.status = 404;
+      ctx.body = err;
+    } else {
+      ctx.status = 500;
+      ctx.body = { message: 'Internal error' };
+    }
+  }
 });
 
 
