@@ -35,6 +35,21 @@ class UsersService {
     }
   }
 
+  async getUser(userName) {
+    try {
+      const user = await dataSource.manager.findOne(User, { where: { userName } });
+
+      if(!user) {
+        throw { validationErrors: 'User not found' };
+      }
+
+      return user;
+
+    } catch (err) {
+      throw err
+    }
+  }
+
   async createUser(user) {
     try {
       const userDTO = new UserDTO();

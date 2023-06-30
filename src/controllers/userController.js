@@ -20,8 +20,19 @@ usersController.get('/users', async (ctx) => {
 });
 
 usersController.get('/users/:username', async (ctx) => {
-  const userId = ctx.params.username;
-  ctx.body = `User with ID ${userId}`;
+  const username = ctx.params.username;
+  try {
+    ctx.body = await users.getUser(username);
+
+  } catch (err) {
+    if (err.validationErrors) {
+      ctx.status = 404;
+      ctx.body = err;
+    } else {
+      ctx.status = 500;
+      ctx.body = { message: 'Internal error' };
+    }
+  }
 });
 
 usersController.post('/users', async (ctx) => {
