@@ -14,8 +14,21 @@ usersController.get('/users/:id', async (ctx) => {
 });
 
 usersController.post('/users', async (ctx) => {
-  // Handle POST request to the root of the "users" route
-  // Access request body using ctx.request.body
+  try {
+    const body = ctx.request.body;
+    await users.createUser(body)
+  
+    ctx.status = 201;
+  } catch(err) {
+    if (err.validationErrors) {
+      ctx.status = 400;
+      ctx.body = err;
+    } else {
+      ctx.status = 500;
+      ctx.body = { message: 'Internal error' };
+    }
+  }
+  
 });
 
 usersController.put('/users/:id', async (ctx) => {
