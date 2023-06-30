@@ -5,12 +5,34 @@ const usersController = new Router();
 const users = new UsersService();
 
 usersController.get('/users', async (ctx) => {
-  ctx.body = users.getAllUsers();
+  try {
+    ctx.body = await users.getAllUsers(ctx.query.page || 1, 10);
+
+  } catch (err) {
+    if (err.validationErrors) {
+      ctx.status = 400;
+      ctx.body = err;
+    } else {
+      ctx.status = 500;
+      ctx.body = { message: 'Internal error' };
+    }
+  }
 });
 
-usersController.get('/users/:id', async (ctx) => {
-  const userId = ctx.params.id;
-  ctx.body = `User with ID ${userId}`;
+usersController.get('/users/:username', async (ctx) => {
+  const username = ctx.params.username;
+  try {
+    ctx.body = await users.getUser(username);
+
+  } catch (err) {
+    if (err.validationErrors) {
+      ctx.status = 404;
+      ctx.body = err;
+    } else {
+      ctx.status = 500;
+      ctx.body = { message: 'Internal error' };
+    }
+  }
 });
 
 usersController.post('/users', async (ctx) => {
