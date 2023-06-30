@@ -50,6 +50,20 @@ class UsersService {
     }
   }
 
+  async deleteUser(userName) {
+    try {
+      const user = await dataSource.manager.findOne(User, { where: { userName } });
+
+      if(!user) {
+        throw { validationErrors: 'User not found' };
+      }
+
+      await dataSource.manager.delete(User, { userName });
+    } catch (err) {
+      throw err
+    }
+  }
+
   async createUser(user) {
     try {
       const userDTO = new UserDTO();

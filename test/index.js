@@ -149,6 +149,18 @@ describe('Testes da aplicaçao', () => {
       });
   });
 
+
+  it('deveria criar o usuario thor', function (done) {
+    chai.request(app)
+      .post('/users')
+      .send({ name: "thor", email: "thor@devoz.com.br", userName: "thor", password: "1234", age: 55 })
+      .end(function (err, res) {
+        expect(err).to.be.null;
+        expect(res).to.have.status(201);
+        done();
+      });
+  });
+
   it('nao deveria criar usuario com o mesmo username', function (done) {
     chai.request(app)
       .post('/users')
@@ -256,27 +268,26 @@ describe('Testes da aplicaçao', () => {
       });
   });
 
-  // it('deveria excluir o usuario raupp', function (done) {
-  //     chai.request(app)
-  //     .delete('/user/raupp')
-  //     .end(function (err, res) {
-  //         expect(err).to.be.null;
-  //         expect(res).to.have.status(200);
-  //         expect(res.body).to.be.jsonSchema(userSchema);
-  //         done();
-  //     });
-  // });
+  it('deveria excluir o usuario raupp', function (done) {
+      chai.request(app)
+      .delete('/users/raupp')
+      .end(function (err, res) {
+          expect(err).to.be.null;
+          expect(res).to.have.status(204);
+          done();
+      });
+  });
 
-  // it('o usuario raupp não deve existir mais no sistema', function (done) {
-  //     chai.request(app)
-  //     .get('/user/raupp')
-  //     .end(function (err, res) {
-  //         expect(err).to.be.null;
-  //         expect(res).to.have.status(200);
-  //         expect(res.body).to.be.jsonSchema(userSchema);
-  //         done();
-  //     });
-  // });
+  it('o usuario raupp não deve existir mais no sistema', function (done) {
+      chai.request(app)
+      .get('/users/raupp')
+      .end(function (err, res) {
+          expect(err).to.be.null;
+          expect(res).to.have.status(404);
+          expect(res.body.validationErrors).to.be.equal('User not found');
+          done();
+      });
+  });
 
   it('deveria ser uma lista com pelo menos 5 usuarios', function (done) {
     chai.request(app)
